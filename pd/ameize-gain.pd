@@ -1,0 +1,8 @@
+#N canvas 559 346 351 203 10;
+#X obj 19 123 *~;
+#X obj 178 39 ameize-parameter~ \$0 gain 1;
+#X obj 20 39 ameize-inlet~ \$0 input-0;
+#X obj 19 161 ameize-outlet~ \$0 output-0;
+#X connect 0 0 3 0;
+#X connect 1 0 0 1;
+#X connect 2 0 0 0;

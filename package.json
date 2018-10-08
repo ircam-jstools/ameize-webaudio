@@ -1,0 +1,35 @@
+{
+  "name": "test-process",
+  "version": "1.0.0",
+  "description": "project starter for libraries",
+  "main": "dist/index.js",
+  "author": "Benjamin Matuszewski",
+  "license": "BSD-3-Clause",
+  "standalone": "myLibrary",
+  "scripts": {
+    "transpile": "node ./bin/runner --transpile",
+    "prewatch": "npm run transpile",
+    "start": "node ./dist/index.js",
+    "watch": "node ./bin/runner --watch",
+    "watch:execute": "node ./bin/runner --watch-execute",
+    "watch:transpile": "node ./bin/runner --watch-transpile"
+  },
+  "dependencies": {
+    "@ircam/blocked": "^1.0.0",
+    "node-libpd": "^0.1.0",
+    "segfault-handler": "^1.0.1",
+    "waves-masters": "^1.1.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-tape-runner": "^2.0.1",
+    "chalk": "^2.3.0",
+    "fs-extra": "^4.0.3",
+    "klaw": "^2.1.1",
+    "terminate": "^2.1.0",
+    "watch": "^1.0.2"
+  }
+}

@@ -1,0 +1,4 @@
+#N canvas 244 23 291 176 10;
+#X obj 29 24 noise~;
+#X obj 30 75 ameize-outlet~ \$0 output-0;
+#X connect 0 0 1 0;
