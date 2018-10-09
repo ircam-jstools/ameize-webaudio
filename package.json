@@ -1,35 +1,47 @@
 {
-  "name": "test-process",
+  "name": "ameize-webaudio",
   "version": "1.0.0",
-  "description": "project starter for libraries",
+  "description": "minimal implementation of the WebAdudio API using libpd (sic)",
   "main": "dist/index.js",
-  "author": "Benjamin Matuszewski",
+  "author": [
+    "Jean-Philippe Lambert",
+    "Benjamin Matuszewski"
+  ],
   "license": "BSD-3-Clause",
-  "standalone": "myLibrary",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
-    "transpile": "node ./bin/runner --transpile",
+    "bundle": "node ./bin/runner --bundle",
+    "deploy": "np",
+    "doc": "jsdoc -c jsdoc.json",
     "prewatch": "npm run transpile",
-    "start": "node ./dist/index.js",
-    "watch": "node ./bin/runner --watch",
-    "watch:execute": "node ./bin/runner --watch-execute",
-    "watch:transpile": "node ./bin/runner --watch-transpile"
+    "test": "babel-tape-runner tests/**.js",
+    "transpile": "node ./bin/runner --transpile",
+    "version": "npm run transpile && npm run doc && git add docs",
+    "watch": "node ./bin/runner --watch"
   },
   "dependencies": {
-    "@ircam/blocked": "^1.0.0",
     "node-libpd": "^0.1.0",
-    "segfault-handler": "^1.0.1",
-    "waves-masters": "^1.1.0"
+    "waves-masters": "^1.1.1"
   },
   "devDependencies": {
+    "@ircam/blocked": "^1.0.0",
+    "@ircam/jsdoc-template": "^1.0.2",
     "babel-core": "^6.26.0",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.1",
     "babel-tape-runner": "^2.0.1",
+    "browserify": "^14.5.0",
     "chalk": "^2.3.0",
     "fs-extra": "^4.0.3",
+    "jsdoc": "^3.5.5",
     "klaw": "^2.1.1",
-    "terminate": "^2.1.0",
+    "np": "^2.18.2",
+    "segfault-handler": "^1.0.1",
+    "tape": "^4.8.0",
+    "uglify-js": "^3.2.2",
     "watch": "^1.0.2"
   }
 }

@@ -1,12 +1,11 @@
 #!/usr/bin/env node
 const pkg = require('../package.json');
-const watch = require('watch');
 const fileStore = require('./fileStore');
 const fs = require('fs');
 const log = require('./log');
 const path = require('path');
 const transpiler = require('./transpiler');
-const forkProcess = require('./forkProcess');
+const watch = require('watch');
 
 const cwd = process.cwd();
 
@@ -20,9 +19,6 @@ const srcRegExp = new RegExp('^' + srcDir);
 const distDir = path.join(cwd, 'dist');
 const distRegExp = new RegExp('^' + distDir);
 
-// config for `watch:pi`
-const executeWatchDirectories = [distDir, path.join(cwd, 'pd')];
-
 const watchOptions = {
   ignoreDotFiles: true,
   ignoreUnreadableDir: true,
@@ -31,6 +27,16 @@ const watchOptions = {
 };
 
 const babelOptions = JSON.parse(fs.readFileSync(path.join(cwd, '.babelrc')));
+
+// bundle configuration
+const umdTarget = pkg.name + '.umd.js';
+const minTarget = pkg.name + '.min.js';
+
+const browserifyOptions = {
+  debug: true,
+  fullPaths: false,
+  standalone: pkg.standalone,
+};
 
 /* --------------------------------------------------------------------------
  * High-Level logic
@@ -65,15 +71,15 @@ function __transpile(srcDirectory, distDirectory, babelOptions) {
     .catch(err => {});
 }
 
-// transpile and restart the process
+// watch
 function __watch(srcDirectory, distDirectory, watchOptions, babelOptions) {
+
   const processFile = (filename, stats) => {
+    const startTime = new Date().getTime();
     const distFilename = filename.replace(srcRegExp, distDirectory);
 
     fileStore.get(filename)
       .then(src => transpileFile(src, distDirectory, babelOptions))
-      .then(([src, dist]) => fileStore.get(pkg.main))
-      .then(main => forkProcess.start(main))
       .catch(err => console.error(err.stack))
   };
 
@@ -83,71 +89,34 @@ function __watch(srcDirectory, distDirectory, watchOptions, babelOptions) {
     fileStore.get(distFilename)
       .then(transpiler.delete)
       .then(log.deleteFileSuccess)
-      .then(([src, dist]) => fileStore.get(pkg.main))
-      .then(main => forkProcess.start(main))
       .catch(err => log.deleteFileError(dist, err));
   };
 
   // watch file system
-  watch.createMonitor(srcDirectory, Object.assign({}, watchOptions), function(monitor) {
+  watch.createMonitor(srcDirectory, watchOptions, function(monitor) {
     monitor.on('created', processFile);
     monitor.on('changed', processFile);
     monitor.on('removed', deleteFile);
   });
-
-  fileStore.get(pkg.main)
-    .then(main => forkProcess.start(main))
-    .catch(err => console.error(err));
 }
 
-// only restart the process on file change
-function __watchExecute(executeWatchDirectories, watchOptions) {
-  fileStore.get(pkg.main)
-    .then(src => forkProcess.start(src).then(log.forkProcessSuccess))
-    .then(src => {
-      const restart = () => {
-        forkProcess
-          .start(src)
-          .then(log.forkProcessSuccess)
-          .catch(err => console.error(err));
-      }
+function __bundle(entryPoint, umdTarget, minTarget, browserifyOptions) {
+  const startTime = new Date().getTime();
+  const promises = [
+    fileStore.get(entryPoint),
+    fileStore.get(umdTarget),
+    fileStore.get(minTarget),
+  ];
 
-      executeWatchDirectories.forEach(dir => {
-        watch.createMonitor(dir, Object.assign({}, watchOptions), function(monitor) {
-          monitor.on('created', restart);
-          monitor.on('changed', restart);
-          monitor.on('removed', restart);
-        });
-      });
+  return Promise.all(promises)
+    .then(([src, umd, min]) => {
+      return transpiler.bundle(src, umd, min, browserifyOptions);
     })
-    .catch(err => console.error(err));
-}
-
-// only transpile on file change
-function __watchTranspile(srcDirectory, distDirectory, watchOptions, babelOptions) {
-  const processFile = (filename, stats) => {
-    const distFilename = filename.replace(srcRegExp, distDirectory);
-
-    fileStore.get(filename)
-      .then(src => transpileFile(src, distDirectory, babelOptions))
-      .catch(err => console.error(err.stack))
-  };
-
-  const deleteFile = (filename, stats) => {
-    const distFilename = filename.replace(srcRegExp, distDir);
-
-    fileStore.get(distFilename)
-      .then(transpiler.delete)
-      .then(log.deleteFileSuccess)
-      .catch(err => log.deleteFileError(dist, err));
-  };
-
-  // watch file system
-  watch.createMonitor(srcDirectory, Object.assign({}, watchOptions), function(monitor) {
-    monitor.on('created', processFile);
-    monitor.on('changed', processFile);
-    monitor.on('removed', deleteFile);
-  });
+    .then(([src, dist, min]) => {
+      const dt = new Date().getTime() - startTime;
+      return log.bundleSuccess(src, dist, min, dt);
+    })
+    .catch(err => log.bundleError(entryPoint, err));
 }
 
 /* --------------------------------------------------------------------------
@@ -163,16 +132,19 @@ switch (command) {
     __watch(srcDir, distDir, watchOptions, babelOptions);
     break;
 
-  case '--watch-execute':
-    __watchExecute(executeWatchDirectories, watchOptions);
-    break;
-
-  case '--watch-transpile':
-    __watchTranspile(srcDir, distDir, watchOptions, babelOptions);
-    break;
-
   case '--transpile':
     __transpile(srcDir, distDir, babelOptions);
+    break;
+
+  case '--bundle':
+    __transpile(srcDir, distDir, babelOptions)
+      .then(() => {
+        return __bundle(pkg.main, umdTarget, minTarget, browserifyOptions);
+      })
+      .catch(err => {
+        if (err && err.stack)
+          console.error(err.stack);
+      });
     break;
 }
 
