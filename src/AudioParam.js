@@ -15,7 +15,6 @@ class AudioParam extends TimeEngine {
     // readonly attribute float maxValue;
 
     this._controlChannel = `${this._parent._patch.$0}-${this._name}-control`;
-
     this._eventCounter = 0;
     this._events = [];
 
