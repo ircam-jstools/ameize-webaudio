@@ -1,0 +1,14 @@
+#N canvas 0 23 450 300 10;
+#X msg 101 68 1;
+#X msg 48 77 0;
+#X obj 21 54 t b b;
+#X obj 48 106 outlet;
+#X obj 21 24 ameize-receive \$1 stop;
+#X obj 100 47 ameize-receive \$1 start;
+#X obj 21 172 ameize-send \$1 ended;
+#X connect 0 0 3 0;
+#X connect 1 0 3 0;
+#X connect 2 0 6 0;
+#X connect 2 1 1 0;
+#X connect 4 0 2 0;
+#X connect 5 0 0 0;
