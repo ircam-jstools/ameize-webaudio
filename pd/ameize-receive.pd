@@ -1,8 +1,8 @@
 #N canvas 987 541 335 159 10;
-#X obj 32 10 receive \$1;
 #X obj 32 84 outlet;
 #X obj 32 43 route list;
 #X text 117 41 get rid of extraneous 'list';
-#X connect 0 0 2 0;
-#X connect 2 0 1 0;
-#X connect 2 1 1 0;
+#X obj 32 10 receive \$1-\$2;
+#X connect 1 0 0 0;
+#X connect 1 1 0 0;
+#X connect 3 0 1 0;
