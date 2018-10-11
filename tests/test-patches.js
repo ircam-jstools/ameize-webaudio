@@ -52,6 +52,10 @@ class PdEngine extends masters.TimeEngine {
 
     let connection;
 
+    ////// debug
+
+    this.debug = pd.openPatch('ameize-debug-activate.pd', patchesPath);
+
     // ////// noise
 
     // this.noise = pd.openPatch('ameize-noise.pd', patchesPath);
@@ -63,6 +67,8 @@ class PdEngine extends masters.TimeEngine {
     // this.noise.connections.push(connection);
     // pd.send(connection.$0 + '-connect', [this.noise.$0 + '-output-0' , this.output.$0 + '-input-0']);
 
+    // pd.send(this.noise.$0 + '-start');
+
     // ////// noise and gain
 
     // this.output = pd.openPatch('ameize-output.pd', patchesPath);
@@ -73,12 +79,13 @@ class PdEngine extends masters.TimeEngine {
     // this.noiseGain.connections = [];
     // this.noiseGain.connections.push(connection);
     // pd.send(connection.$0 + '-connect', [this.noiseGain.$0 + '-output-0' , this.output.$0 + '-input-0']);
-
     // this.noise = pd.openPatch('ameize-noise.pd', patchesPath);
     // connection = pd.openPatch('ameize-connection.pd', patchesPath);
     // this.noise.connections = [];
     // this.noise.connections.push(connection);
     // pd.send(connection.$0 + '-connect', [this.noise.$0 + '-output-0' , this.noiseGain.$0 + '-input-0']);
+
+    // pd.send(this.noise.$0 + '-start');
 
     // ////// oscillator
 
@@ -92,6 +99,7 @@ class PdEngine extends masters.TimeEngine {
     // this.carrier.connections.push(connection);
     // pd.send(connection.$0 + '-connect', [this.carrier.$0 + '-output-0' , this.output.$0 + '-input-0']);
 
+    // pd.send(this.carrier.$0 + '-start');
 
     // gain modulation
 
@@ -117,6 +125,10 @@ class PdEngine extends masters.TimeEngine {
     this.noise.connections.push(connection);
     pd.send(connection.$0 + '-connect', [this.noise.$0 + '-output-0' , this.noiseGain.$0 + '-input-0']);
 
+    pd.send(this.noise.$0 + '-start');
+    pd.send(this.noiseModulation.$0 + '-start');
+
+
     this.period = 1.;
     this.toggle = 0;
   }
@@ -126,16 +138,15 @@ class PdEngine extends masters.TimeEngine {
 
     // pd.send(this.noiseGain.$0 + '-gain-control', ['linearRampToValue', this.toggle * 0.1, 1000. * this.period / 2.]);
 
-    if(this.toggle) {
-      // const frequency = Math.random() * 4;
-      // pd.send(this.noiseModulation.$0 + '-frequency-control', ['setValue', frequency]);
-    } else  {
-      const frequency = Math.random() * 10.;
-      pd.send(this.noiseModulation.$0 + '-frequency-control', ['setValue', frequency]);
+    // if(this.toggle) {
+    //   // const frequency = Math.random() * 4;
+    //   // pd.send(this.noiseModulation.$0 + '-frequency-control', ['setValue', frequency]);
+    // } else  {
+    //   const frequency = Math.random() * 10.;
+    //   pd.send(this.noiseModulation.$0 + '-frequency-control', ['setValue', frequency]);
 
-      // @fixme
-      // pd.send(this.noiseModulation.$0 + '-frequency-control', ['linearRampTovalue', frequency, 1000. * this.period]);
-    }
+      // pd.send(this.noiseModulation.$0 + '-frequency-control', ['linearRampToValue', frequency, 1000. * this.period]);
+    // }
 
     return time + this.period;
   }

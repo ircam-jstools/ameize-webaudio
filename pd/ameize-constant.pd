@@ -1,11 +1,11 @@
 #N canvas 577 405 493 200 10;
 #X obj 43 82 ameize-outlet~ \$0 0;
-#N canvas 0 23 449 171 parameter~ 0;
+#N canvas 0 23 540 171 parameter~ 1;
 #X obj 43 46 ameize-parameter~ \$0 offset 1;
 #X obj 243 73 switch~;
-#X obj 243 50 ameize-scheduled-source \$0;
 #X obj 43 76 outlet~;
-#X connect 0 0 3 0;
-#X connect 2 0 1 0;
+#X obj 243 50 ameize-scheduled-source \$0 ameize-constant;
+#X connect 0 0 2 0;
+#X connect 3 0 1 0;
 #X restore 42 54 pd parameter~;
 #X connect 1 0 0 0;

@@ -1,12 +1,8 @@
-#N canvas 0 23 385 191 10;
+#N canvas 0 23 346 142 10;
 #X obj 37 37 inlet;
-#X obj 37 64 send \$1-\$2;
-#X obj 117 82 print ameize-send \$1 \$2;
-#X obj 116 60 spigot;
-#X obj 149 40 value ameize_debug;
-#X obj 149 19 loadbang;
-#X connect 0 0 1 0;
+#X obj 37 97 send \$1-\$2;
+#X obj 111 97 ameize-debug \$1 ameize-send-\$2;
+#X obj 37 60 t a a;
 #X connect 0 0 3 0;
-#X connect 3 0 2 0;
-#X connect 4 0 3 1;
-#X connect 5 0 4 0;
+#X connect 3 0 1 0;
+#X connect 3 1 2 0;

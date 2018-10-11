@@ -1,11 +1,11 @@
 #N canvas 244 23 299 152 10;
-#X obj 30 75 ameize-outlet~ \$0 output-0;
-#N canvas 0 23 448 120 noise~ 0;
+#X obj 33 47 ameize-outlet~ \$0 output-0;
+#N canvas 0 23 581 120 noise~ 0;
 #X obj 29 24 noise~;
 #X obj 241 42 switch~;
-#X obj 241 19 ameize-scheduled-source \$0;
 #X obj 29 54 outlet~;
-#X connect 0 0 3 0;
-#X connect 2 0 1 0;
-#X restore 32 38 pd noise~;
+#X obj 243 19 ameize-scheduled-source \$0 ameize-noise;
+#X connect 0 0 2 0;
+#X connect 3 0 1 0;
+#X restore 33 18 pd noise~;
 #X connect 1 0 0 0;
