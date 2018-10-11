@@ -1,0 +1,6 @@
+#N canvas 699 118 174 126 10;
+#X obj 19 69 value ameize_debug;
+#X obj 19 19 loadbang;
+#X msg 19 44 1;
+#X connect 1 0 2 0;
+#X connect 2 0 0 0;
