@@ -1,9 +1,9 @@
-#N canvas 261 666 506 349 10;
-#X obj 30 293 dac~ 1;
-#X msg 73 213 set \$1;
-#X obj 20 92 ameize-inlet~ \$0 input-0;
-#X obj 73 173 + 1;
-#X obj 73 137 ameize-receive \$0 destination;
+#N canvas 206 226 316 273 10;
+#X obj 30 221 dac~ 1;
+#X msg 69 141 set \$1;
+#X obj 31 21 ameize-inlet~ \$0 input-0;
+#X obj 69 101 + 1;
+#X obj 69 65 ameize-receive \$0 destination;
 #X connect 1 0 0 0;
 #X connect 2 0 0 0;
 #X connect 3 0 1 0;

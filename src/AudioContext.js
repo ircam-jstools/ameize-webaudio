@@ -46,7 +46,7 @@ class Connection {
 class AudioContext {
   constructor() {
     this._pd = pd;
-    this._connections = [];
+    // this._connections = [];
     // init pd
     const initialized = this._pd.init({
       // use the same parameters as the audio driver, including the number of channels
@@ -65,6 +65,8 @@ class AudioContext {
     this._scheduler = new Scheduler(() => {
       return pd.currentTime;
     });
+
+    this._activeSources = new Set();
   }
 
   get currentTime() {
@@ -85,11 +87,13 @@ class AudioContext {
   /** @private */
   _connect(source, destination) {
     if (destination instanceof AudioNode || destination instanceof AudioParam) {
-      const index = this._connections.findIndex(c => c.source === source && c.destination === destination)
+      const index = source._connections.findIndex(c => {
+        return c.source === source && c.destination === destination;
+      });
 
       if (index === -1) {
         const connection = new Connection(this, source, destination);
-        this._connections.push(connection);
+        source._connections.push(connection);
       }
     } else {
       throw new TypeError(`Failed to execute 'connect' on 'AudioNode': No function was found that matched the signature provided.`);
@@ -100,9 +104,34 @@ class AudioContext {
   _disconnect(source, destination = null) {
     if (destination instanceof AudioParam || destination instanceof AudioNode) {
       // delete related connection
+      const index = source._connections.findIndex(c => {
+        return c.source === source && c.destination === destination;
+      });
+
+      if (index !== -1) {
+        const connection = source._connections[index];
+        connection.delete();
+        source._connections.splice(index, 1);
+      }
     } else {
-      // delete all connected related to the source
+      // delete all connections of the source
+      source._connections.forEach(connection => connection.delete());
+      source._connections.length = 0;
     }
+  }
+
+  /**
+   * prevent sources from garbage collection and thus the whole chain
+   */
+  _addScheduledSourcePointer(audioScheduledSourceNode) {
+    this._activeSources.add(audioScheduledSourceNode);
+  }
+
+  /**
+   * reallow sources to be garbage collected and thus the whole chain
+   */
+  _clearScheduledSourcePointer(audioScheduledSourceNode) {
+    this._activeSources.delete(audioScheduledSourceNode);
   }
 
   // @todo
@@ -112,7 +141,7 @@ class AudioContext {
 
   // @todo
   supend() {
-
+    return Promise.resolve();
   }
 
   close() {

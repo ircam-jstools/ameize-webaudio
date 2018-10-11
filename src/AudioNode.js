@@ -30,7 +30,8 @@ class AudioNode extends EventTarget {
 
     this._audioContext = audioContext;
     this._patch = null; // instance of the pd patch
-    this._connections = new Set();
+
+    this._connections = [];
   }
 
   /**

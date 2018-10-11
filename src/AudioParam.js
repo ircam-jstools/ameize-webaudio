@@ -1,9 +1,9 @@
 import { TimeEngine } from 'waves-masters';
 
 
-class AudioParam extends TimeEngine {
+class AudioParam {
   constructor(parent, name) {
-    super();
+    // super();
 
     this._parent = parent;
     this._name = name;
@@ -17,8 +17,6 @@ class AudioParam extends TimeEngine {
     this._controlChannel = `${this._parent._patch.$0}-${this._name}-control`;
     this._eventCounter = 0;
     this._events = [];
-
-    this._parent._audioContext._scheduler.add(this);
   }
 
   /** @private */
@@ -37,7 +35,7 @@ class AudioParam extends TimeEngine {
     });
 
     if (this._events[0] === event) {
-      this.resetTime(event.time);
+      this._parent._audioContext._scheduler.add(this, event.time);
     }
   }
 
@@ -57,7 +55,7 @@ class AudioParam extends TimeEngine {
     if (this._events.length > 0) {
       return this._events[0].time;
     } else {
-      return Infinity;
+      return null; // remove from master
     }
   }
 
@@ -110,9 +108,9 @@ class AudioParam extends TimeEngine {
 
     if (this._events.length > 0) {
       const lastEvent = this._events[this._events.length - 1];
-      const eventType = lastEvent.args[0];
+      const lastEventType = lastEvent.args[0];
 
-      switch (eventType) {
+      switch (lastEventType) {
         case 'linearRampToValue':
         case 'exponentialRampToValue':
           time = lastEvent.time + lastEvent.args[2];
@@ -138,7 +136,39 @@ class AudioParam extends TimeEngine {
   }
 
   exponentialRampToValueAtTime(value, endTime) {
-    console.error('to be implemented');
+    if (value <= 0) {
+      throw new Error('Invalid target for exponentialRampToValueAtTime')
+    }
+
+    let time;
+
+    if (this._events.length > 0) {
+      const lastEvent = this._events[this._events.length - 1];
+      const lastEventType = lastEvent.args[0];
+
+      switch (lastEventType) {
+        case 'linearRampToValue':
+        case 'exponentialRampToValue':
+          time = lastEvent.time + lastEvent.args[2];
+          break;
+        default:
+          time = lastEvent.time;
+          break;
+      }
+    } else {
+      time = this._parent._audioContext._pd.currentTime;
+    }
+
+    const duration = endTime - time;
+
+    if (duration > 0) {
+      const event = {
+        time: time,
+        args: ['exponentialRampToValue', value, duration],
+      };
+
+      this._registerEvent(event);
+    }
   }
 
   setTargetAtTime(target, startTime, timeConstant) {
