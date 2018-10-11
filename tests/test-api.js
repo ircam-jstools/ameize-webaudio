@@ -73,15 +73,15 @@ const audioContext = new AudioContext();
 // osc.stop(now + 4);
 
 // endedsource
-// (function() {
-//   const osc = audioContext.createOscillator();
-//   const now = audioContext.currentTime;
-//   osc.connect(audioContext.destination);
-//   osc.start(now);
-//   osc.stop(now + 2);
-//   // osc.frequency.setValueAtTime(440, now);
-//   // osc.frequency.exponentialRampToValueAtTime(880, now + 5);
-// }());
+(function() {
+  const osc = audioContext.createOscillator();
+  const now = audioContext.currentTime;
+  osc.connect(audioContext.destination);
+  osc.start(now);
+  // osc.stop(now + 2);
+  // osc.frequency.setValueAtTime(440, now);
+  // osc.frequency.exponentialRampToValueAtTime(880, now + 5);
+}());
 
 
 

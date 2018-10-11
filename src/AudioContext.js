@@ -34,6 +34,7 @@ class Connection {
     // close patch
     this.audioContext._pd.closePatch(this._patch);
     // clean references
+    // not really needed as the connection should be unreachable at this point
     this.audioContext = null;
     this.source = null;
     this.destination = null;
