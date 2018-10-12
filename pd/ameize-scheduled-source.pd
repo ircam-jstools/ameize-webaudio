@@ -1,4 +1,4 @@
-#N canvas 830 218 686 382 10;
+#N canvas 461 138 743 382 10;
 #X msg 200 82 1;
 #X msg 48 77 0;
 #X obj 21 55 t b b;
@@ -29,7 +29,6 @@
 #X obj 518 244 * 1000;
 #X obj 347 83 t b b l b;
 #X obj 161 62 t b b b l;
-#X msg -138 209 100000;
 #X connect 0 0 3 0;
 #X connect 1 0 3 0;
 #X connect 2 0 5 0;

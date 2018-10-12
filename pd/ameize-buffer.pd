@@ -1,4 +1,4 @@
-#N canvas 462 23 645 314 10;
+#N canvas 27 23 645 314 10;
 #X obj 267 168 soundfiler;
 #X msg 267 144 read -resize \$1 \$2;
 #X obj 466 51 loadbang;

@@ -8,4 +8,5 @@
 #X connect 0 0 2 0;
 #X connect 3 0 1 0;
 #X restore 33 18 pd noise~;
+#X text 102 20 switch~ inside to output 0 on mute;
 #X connect 1 0 0 0;
