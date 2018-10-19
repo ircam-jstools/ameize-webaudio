@@ -6,9 +6,10 @@ import AudioNode from './AudioNode';
 import AudioParam from './AudioParam';
 
 import OscillatorNode from './OscillatorNode';
+import AudioBufferSourceNode from './AudioBufferSourceNode';
 import GainNode from './GainNode';
 
-const patchesPath = path.join(process.cwd(), 'pd');
+const patchesPath = path.join(__dirname, '..', 'pd');
 
 /** @private */
 class Connection {
@@ -151,6 +152,10 @@ class AudioContext {
 
   createOscillator() {
     return new OscillatorNode(this);
+  }
+
+  createBufferSource() {
+    return new AudioBufferSourceNode(this);
   }
 
   createGain() {

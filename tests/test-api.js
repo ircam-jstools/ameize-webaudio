@@ -1,5 +1,7 @@
 import AudioContext from '../src/AudioContext';
-import * as masters from 'waves-masters'
+import AudioBufferLoader from '../src/AudioBufferLoader';
+import * as masters from 'waves-masters';
+import path from 'path';
 
 const audioContext = new AudioContext();
 
@@ -73,18 +75,28 @@ const audioContext = new AudioContext();
 // osc.stop(now + 4);
 
 // endedsource
-(function() {
-  const osc = audioContext.createOscillator();
-  const now = audioContext.currentTime;
-  osc.connect(audioContext.destination);
-  osc.start(now);
-  // osc.stop(now + 2);
-  // osc.frequency.setValueAtTime(440, now);
-  // osc.frequency.exponentialRampToValueAtTime(880, now + 5);
-}());
+// (function() {
+//   const osc = audioContext.createOscillator();
+//   const now = audioContext.currentTime;
+//   osc.connect(audioContext.destination);
+//   osc.start(now);
+//   // osc.stop(now + 2);
+//   // osc.frequency.setValueAtTime(440, now);
+//   // osc.frequency.exponentialRampToValueAtTime(880, now + 5);
+// }());
 
 
+const loader = new AudioBufferLoader();
 
+loader
+  .load(path.join(__dirname, 'audio', 'voice.wav'))
+  .then(buffer => {
+    const src = audioContext.createBufferSource();
+    src.buffer = buffer;
+    src.connect(audioContext.destination);
+    src.start(audioContext.currentTime);
+  })
+  .catch(err => console.error(err));
 
 
 
