@@ -1,4 +1,4 @@
-#N canvas 559 346 526 222 10;
+#N canvas 30 23 526 222 10;
 #X obj 19 123 *~;
 #X obj 212 39 ameize-parameter~ \$0 gain 1;
 #X obj 20 39 ameize-inlet~ \$0 input-0;
