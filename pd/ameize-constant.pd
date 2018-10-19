@@ -1,6 +1,6 @@
-#N canvas 577 405 493 200 10;
+#N canvas 15 23 493 200 10;
 #X obj 43 82 ameize-outlet~ \$0 0;
-#N canvas 0 23 540 171 parameter~ 1;
+#N canvas 0 23 540 171 parameter~ 0;
 #X obj 43 46 ameize-parameter~ \$0 offset 1;
 #X obj 243 73 switch~;
 #X obj 43 76 outlet~;
@@ -8,4 +8,9 @@
 #X connect 0 0 2 0;
 #X connect 3 0 1 0;
 #X restore 42 54 pd parameter~;
+#X obj 237 39 loadbang;
+#X obj 237 89 ameize-debug \$0 new;
+#X obj 237 61 symbol ameize-constant;
 #X connect 1 0 0 0;
+#X connect 2 0 4 0;
+#X connect 4 0 3 0;

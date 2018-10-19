@@ -1,4 +1,4 @@
-#N canvas 42 23 432 101 10;
+#N canvas 42 23 539 131 10;
 #N canvas 306 23 1068 855 tabread4 0;
 #X obj 36 12 ameize-parameter~ \$0 playbackRate 1;
 #X obj 261 12 ameize-parameter~ \$0 detune 0;
@@ -192,8 +192,5 @@
 #X connect 72 0 51 0;
 #X restore 18 12 pd tabread4;
 #X obj 18 42 ameize-outlet~ \$0 output-0;
-#X obj 194 44 dac~;
 #X text 96 14 switch~ inside to output 0 on mute;
 #X connect 0 0 1 0;
-#X connect 0 0 2 0;
-#X connect 0 0 2 1;

@@ -1,4 +1,4 @@
-#N canvas 244 23 299 152 10;
+#N canvas 33 23 530 137 10;
 #X obj 33 47 ameize-outlet~ \$0 output-0;
 #N canvas 0 23 581 120 noise~ 0;
 #X obj 29 24 noise~;
